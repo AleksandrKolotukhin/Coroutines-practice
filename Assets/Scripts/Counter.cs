@@ -7,6 +7,7 @@ public class Counter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _counterText;
     private int _counter = 0;
     private bool _isCounting = false;
+    private WaitForSeconds _waitForHalfSecond = new WaitForSeconds(0.5f);
 
     private void Start()
     {
@@ -19,15 +20,19 @@ public class Counter : MonoBehaviour
 
         if (_isCounting == true)
         {
-            StartCoroutine(Count());
+            StartCoroutine(IncreaseCount());
+        }
+        else
+        {
+            StopCoroutine(IncreaseCount());
         }
     }
 
-    private IEnumerator Count()
+    private IEnumerator IncreaseCount()
     {
         while (_isCounting == true)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return _waitForHalfSecond;
             _counter++;
             UpdateCounterText();
         }
