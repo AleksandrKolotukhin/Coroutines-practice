@@ -4,14 +4,15 @@ using TMPro;
 
 public class Counter : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _counterText;
-    private int _counter = 0;
+    [SerializeField] private TextMeshProUGUI _scoreText;
+    private int _score = 0;
     private bool _isCounting = false;
-    private WaitForSeconds _waitForHalfSecond = new WaitForSeconds(0.5f);
+    private WaitForSeconds _waitingTime = new WaitForSeconds(0.5f);
+    private Coroutine _increaseScoreCoroutine;
 
     private void Start()
     {
-        UpdateCounterText();
+        UpdateScoreText();
     }
 
     private void OnMouseDown()
@@ -20,26 +21,30 @@ public class Counter : MonoBehaviour
 
         if (_isCounting == true)
         {
-            StartCoroutine(IncreaseCount());
+            _increaseScoreCoroutine = StartCoroutine(IncreaseScore());
         }
         else
         {
-            StopCoroutine(IncreaseCount());
+            if (_increaseScoreCoroutine != null)
+            {
+                StopCoroutine(IncreaseScore());
+                _increaseScoreCoroutine = null;
+            }
         }
     }
 
-    private IEnumerator IncreaseCount()
+    private IEnumerator IncreaseScore()
     {
         while (_isCounting == true)
         {
-            yield return _waitForHalfSecond;
-            _counter++;
-            UpdateCounterText();
+            yield return _waitingTime;
+            _score++;
+            UpdateScoreText();
         }
     }
 
-    private void UpdateCounterText()
+    private void UpdateScoreText()
     {
-        _counterText.text = _counter.ToString();
+        _scoreText.text = _score.ToString();
     }
 }
